@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Weather Viewer</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f7f7f7; }
+    table { border-collapse: collapse; width: 100%; background: #fff; }
+    th, td { padding: 8px 12px; border: 1px solid #ccc; }
+    th { background-color: #f0f0f0; }
+    input[type="file"] { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>🌦️ 天氣資料查看器</h1>
+  <input type="file" accept=".csv" id="fileInput" />
+  <table id="dataTable"></table>
+
+  <script>
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const lines = e.target.result.split('\n').filter(line => line.trim() !== '');
+        const table = document.getElementById('dataTable');
+        table.innerHTML = '';
+        
+        lines.forEach((line, idx) => {
+          const row = table.insertRow();
+          line.split(',').forEach(cell => {
+            const cellElement = idx === 0 ? document.createElement('th') : document.createElement('td');
+            cellElement.textContent = cell;
+            row.appendChild(cellElement);
+          });
+        });
+      };
+      reader.readAsText(file, 'utf-8');
+    });
+  </script>
+</body>
+</html>
